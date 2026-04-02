@@ -66,27 +66,27 @@ function startQuiz() {
 function showQuestion1() {
   document.getElementById("app").innerHTML = `
     <h2>How do you get to class?</h2>
-    <button onclick="selectAnswer('walk')">🚶 Walking</button>
-    <button onclick="selectAnswer('run')">🏃 Running late</button>
-    <button onclick="selectAnswer('chill')">😎 Chill</button>
+    <button onclick="selectAnswer('walk')">Walking</button>
+    <button onclick="selectAnswer('run')">Running late</button>
+    <button onclick="selectAnswer('chill')">Chill</button>
   `;
 }
 
 function showQuestion2() {
   document.getElementById("app").innerHTML = `
     <h2>Pick your vibe</h2>
-    <button onclick="selectAnswer('style')">🔥 Trendy</button>
-    <button onclick="selectAnswer('minimal')">✨ Minimal</button>
-    <button onclick="selectAnswer('athletic')">💪 Sporty</button>
+    <button onclick="selectAnswer('style')">Trendy</button>
+    <button onclick="selectAnswer('minimal')">Minimal</button>
+    <button onclick="selectAnswer('athletic')">Sporty</button>
   `;
 }
 
 function showQuestion3() {
   document.getElementById("app").innerHTML = `
     <h2>What matters most?</h2>
-    <button onclick="selectAnswer('comfort')">😌 Comfort</button>
-    <button onclick="selectAnswer('performance')">⚡ Performance</button>
-    <button onclick="selectAnswer('style')">👟 Style</button>
+    <button onclick="selectAnswer('comfort')">Comfort</button>
+    <button onclick="selectAnswer('performance')">Performance</button>
+    <button onclick="selectAnswer('style')">Style</button>
   `;
 }
 
@@ -152,8 +152,8 @@ function showNextShoe() {
   document.getElementById("app").innerHTML = `
     <h2>${shoe.name}</h2>
     <img src="${shoe.image}" width="250"><br/>
-    <button onclick="likeShoe()">👍 Like</button>
-    <button onclick="nextShoe()">👎 Skip</button>
+    <button onclick="likeShoe()">Like</button>
+    <button onclick="nextShoe()">Skip</button>
   `;
 }
 
@@ -180,7 +180,7 @@ function showResult() {
     .sort((a, b) => b.score - a.score)[0];
 
   document.getElementById("app").innerHTML = `
-    <h2>Your Perfect Shoe 👟</h2>
+    <h2>Your Perfect Shoe</h2>
     <h3>${best.name}</h3>
     <img src="${best.image}" width="250"><br/>
     <p>This shoe matches your style and preferences!</p>
