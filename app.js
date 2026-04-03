@@ -286,4 +286,5 @@ function showResult() {
     <p>This shoe matches your style and preferences!</p>
     <button onclick="startQuiz()">Try Again</button>
   `;
+  }
 }
