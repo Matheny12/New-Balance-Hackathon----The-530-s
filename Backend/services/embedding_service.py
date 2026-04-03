@@ -17,7 +17,7 @@ def embed_query(query: str) -> list[float]:
     """
     client = _get_client()
     response = client.models.embed_content(
-        model="text-embedding-004",
+        model="gemini-embedding-001",
         contents=query,
     )
     return response.embeddings[0].values
@@ -32,7 +32,7 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
         
     client = _get_client()
     response = client.models.embed_content(
-        model="text-embedding-004",
+        model="gemini-embedding-001",
         contents=texts,
     )
     return [emb.values for emb in response.embeddings]
