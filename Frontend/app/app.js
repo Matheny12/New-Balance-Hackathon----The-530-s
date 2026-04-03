@@ -246,9 +246,6 @@ function initNBQuiz(rootId) {
   };
  
   // ─── CSS ─────────────────────────────────────────────────────
-  // Styled to match your existing stylesheet:
-  //   background-color: bisque | h1: Merriweather, rgb(65,44,27)
-  //   h2: Outfit, rgb(133,65,34) | buttons: rgb(133,65,34) bg, bisque text, Outfit font
   const CSS = `
     @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Outfit:wght@400;500;600;700&display=swap');
  
@@ -294,15 +291,15 @@ function initNBQuiz(rootId) {
       text-transform: uppercase;
     }
     .nb-progress {
-      width: 100%; max-width: 480px;
-      height: 4px;
+      width: 100%; max-width: 560px;
+      height: 5px;
       background: var(--nb-bisque-dark);
       border-radius: 2px;
       margin-bottom: 2.5rem;
       display: none;
     }
     .nb-progress-fill {
-      height: 4px;
+      height: 5px;
       background: var(--nb-brown);
       border-radius: 2px;
       transition: width 0.5s cubic-bezier(.4,0,.2,1);
@@ -352,25 +349,25 @@ function initNBQuiz(rootId) {
  
     /* ── QUESTION ──────────────────────────── */
     .nb-question {
-      width: 100%; max-width: 480px;
+      width: 100%; max-width: 560px;
       background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
       border: 1.5px solid var(--nb-bisque-mid);
-      padding: 2rem 1.75rem;
+      padding: 2.25rem 2rem;
       animation: nbFadeUp 0.3s ease;
     }
     .nb-q-step {
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 28px;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--nb-brown);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
     .nb-q-text {
       font-family: 'Merriweather', sans-serif;
-      font-size: 20px;
+      font-size: 40px;
       font-weight: 700;
       color: var(--nb-brown-dark);
       line-height: 1.4;
@@ -379,26 +376,26 @@ function initNBQuiz(rootId) {
     }
     .nb-q-sub {
       font-family: 'Outfit', sans-serif;
-      font-size: 13px;
+      font-size: 28px;
       color: var(--nb-brown-dark);
       opacity: 0.7;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
     .nb-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 20px;
     }
     .nb-opt {
       background: var(--nb-bisque);
       border: 2px solid var(--nb-bisque-mid);
       border-radius: var(--nb-radius-sm);
-      padding: 14px 10px 12px;
+      padding: 22px 14px 20px;
       cursor: pointer;
       text-align: center;
       transition: all 0.15s ease;
       display: flex; flex-direction: column;
-      align-items: center; gap: 5px;
+      align-items: center; gap: 8px;
       -webkit-tap-highlight-color: transparent;
     }
     .nb-opt:hover {
@@ -411,16 +408,16 @@ function initNBQuiz(rootId) {
       outline: 3px solid var(--nb-brown);
       outline-offset: -1px;
     }
-    .nb-opt-icon { font-size: 24px; line-height: 1; }
+    .nb-opt-icon { font-size: 34px; line-height: 1; }
     .nb-opt-label {
       font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--nb-brown-dark);
     }
     .nb-opt-desc {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 28px;
       color: var(--nb-brown);
       opacity: 0.85;
       line-height: 1.3;
@@ -428,7 +425,7 @@ function initNBQuiz(rootId) {
  
     /* ── SWIPE PHASE ───────────────────────── */
     .nb-swipe-area {
-      width: 100%; max-width: 390px;
+      width: 100%; max-width: 440px;
     }
     .nb-shoe-card {
       background: var(--nb-card-bg);
@@ -448,7 +445,7 @@ function initNBQuiz(rootId) {
       position: absolute;
       top: 12px; right: 14px;
       font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-size: 20px;
       font-weight: 600;
       color: var(--nb-brown);
       opacity: 0.7;
@@ -456,33 +453,33 @@ function initNBQuiz(rootId) {
     }
     .nb-shoe-img {
       width: 100%;
-      max-width: 260px;
-      height: 155px;
+      max-width: 280px;
+      height: 170px;
       object-fit: contain;
       border-radius: 10px;
       margin-top: 20px;
     }
-    .nb-shoe-info { padding: 1.25rem 1.5rem 1.5rem; }
+    .nb-shoe-info { padding: 1.5rem 1.75rem 1.75rem; }
     .nb-shoe-name {
       font-family: 'Merriweather', sans-serif;
-      font-size: 18px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--nb-brown-dark);
       text-shadow: 1px 1px 2px rgba(51,25,10,0.15);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .nb-shoe-profile {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--nb-brown);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .nb-shoe-desc {
       font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-size: 28px;
       color: var(--nb-brown-dark);
       opacity: 0.8;
       line-height: 1.6;
@@ -493,9 +490,9 @@ function initNBQuiz(rootId) {
     }
     .nb-tag {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 28px;
       font-weight: 500;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       background: var(--nb-bisque);
       color: var(--nb-brown);
@@ -504,14 +501,14 @@ function initNBQuiz(rootId) {
     .nb-swipe-btns {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
+      gap: 12px;
+      margin-top: 16px;
     }
     .nb-skip {
-      padding: 10px 20px;
+      padding: 14px 20px;
       border-radius: var(--nb-radius-sm);
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 30px;
       font-weight: 600;
       cursor: pointer;
       background: var(--nb-bisque);
@@ -521,10 +518,10 @@ function initNBQuiz(rootId) {
       transition: all 0.15s;
     }
     .nb-like {
-      padding: 10px 20px;
+      padding: 14px 20px;
       border-radius: var(--nb-radius-sm);
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 30px;
       font-weight: 600;
       cursor: pointer;
       background: var(--nb-brown);
@@ -537,17 +534,17 @@ function initNBQuiz(rootId) {
     .nb-like:hover { opacity: 0.88; }
     .nb-swipe-hint {
       font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-size: 20px;
       color: var(--nb-brown);
       opacity: 0.6;
       text-align: center;
-      margin-top: 9px;
+      margin-top: 10px;
       letter-spacing: 0.02em;
     }
  
     /* ── RESULT ────────────────────────────── */
     .nb-result {
-      width: 100%; max-width: 420px;
+      width: 100%; max-width: 480px;
       background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
       border: 1.5px solid var(--nb-bisque-mid);
@@ -561,7 +558,7 @@ function initNBQuiz(rootId) {
     }
     .nb-result-eyebrow {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 30px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -570,7 +567,7 @@ function initNBQuiz(rootId) {
     }
     .nb-result-name {
       font-family: 'Merriweather', sans-serif;
-      font-size: 24px;
+      font-size: 40px;
       font-weight: 700;
       color: var(--nb-brown-dark);
       text-shadow: 2px 2px 3px rgba(51,25,10,0.3);
@@ -578,24 +575,24 @@ function initNBQuiz(rootId) {
     }
     .nb-result-profile {
       font-family: 'Outfit', sans-serif;
-      font-size: 13px;
+      font-size: 28px;
       color: var(--nb-brown);
       margin-bottom: 1.25rem;
       font-weight: 500;
     }
     .nb-result-img {
       width: 100%;
-      max-width: 230px;
-      height: 145px;
+      max-width: 250px;
+      height: 160px;
       object-fit: contain;
       display: block;
       margin: 0 auto;
       border-radius: 10px;
     }
-    .nb-result-body { padding: 1.5rem; }
+    .nb-result-body { padding: 1.75rem; }
     .nb-result-blurb {
       font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-size: 30px;
       color: var(--nb-brown-dark);
       opacity: 0.85;
       line-height: 1.65;
@@ -609,26 +606,26 @@ function initNBQuiz(rootId) {
     }
     .nb-match-label {
       font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-size: 28px;
       font-weight: 600;
       color: var(--nb-brown);
       white-space: nowrap;
     }
     .nb-match-bar {
       flex: 1;
-      height: 6px;
+      height: 7px;
       background: var(--nb-bisque-dark);
       border-radius: 3px;
       overflow: hidden;
     }
     .nb-match-fill {
-      height: 6px;
+      height: 7px;
       background: var(--nb-brown);
       border-radius: 3px;
     }
     .nb-match-pct {
       font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--nb-brown-dark);
       white-space: nowrap;
@@ -639,7 +636,7 @@ function initNBQuiz(rootId) {
     }
     .nb-runners-label {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 28px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -649,12 +646,12 @@ function initNBQuiz(rootId) {
     }
     .nb-runner {
       display: flex; align-items: center;
-      gap: 12px; padding: 8px 0;
+      gap: 12px; padding: 10px 0;
       border-bottom: 1px solid var(--nb-bisque-mid);
     }
     .nb-runner:last-child { border-bottom: none; }
     .nb-runner-img {
-      width: 56px; height: 38px;
+      width: 64px; height: 44px;
       object-fit: contain;
       background: var(--nb-bisque);
       border-radius: 8px;
@@ -663,23 +660,23 @@ function initNBQuiz(rootId) {
     }
     .nb-runner-name {
       font-family: 'Outfit', sans-serif;
-      font-size: 13px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--nb-brown-dark);
     }
     .nb-runner-profile {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 30px;
       color: var(--nb-brown);
-      margin-top: 1px;
+      margin-top: 2px;
       opacity: 0.8;
     }
  
     /* ── SHARED BUTTONS ────────────────────── */
     .nb-btn-primary {
-      margin-top: 1.5rem;
+      margin-top: 1.75rem;
       width: 100%;
-      padding: 10px 20px;
+      padding: 16px 20px;
       background: var(--nb-brown);
       color: var(--nb-bisque);
       border: none;
@@ -688,7 +685,7 @@ function initNBQuiz(rootId) {
       outline-width: 4px;
       border-radius: var(--nb-radius-sm);
       font-family: 'Outfit', sans-serif;
-      font-size: 24px;
+      font-size: 40px;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s;
