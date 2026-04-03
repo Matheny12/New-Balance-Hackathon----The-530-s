@@ -767,71 +767,108 @@ function initNBQuiz(rootId) {
   }
  
   // ─── RENDER: QUESTION ────────────────────────────────────────
-  function renderQuestion() {
-    const q = questions[state.qIndex];
-    const pct = Math.round((state.qIndex / questions.length) * 100);
-    setProgress(pct);
-    const isLast = state.qIndex === questions.length - 1;
- 
-    const optHtml = q.options.map(o => `
-      <div class="nb-opt" data-answer="${o.answer}">
-        <span class="nb-opt-icon">${o.icon}</span>
-        <span class="nb-opt-label">${o.label}</span>
-        <span class="nb-opt-desc">${o.desc}</span>
+function renderQuestion() {
+  const q = questions[state.qIndex];
+  const pct = Math.round((state.qIndex / questions.length) * 100);
+  setProgress(pct);
+  const isLast = state.qIndex === questions.length - 1;
+
+  // Build the options HTML using your icons and descriptions
+  const optHtml = q.options.map(o => `
+    <div class="nb-opt" data-answer="${o.answer}">
+      <span class="nb-opt-icon">${o.icon}</span>
+      <span class="nb-opt-label">${o.label}</span>
+      <span class="nb-opt-desc">${o.desc}</span>
+    </div>
+  `).join("");
+
+  getContent().innerHTML = `
+    <div class="nb-question">
+      <div class="nb-q-step">${q.step}</div>
+      <div class="nb-q-text">${q.text}</div>
+      ${q.sub ? `<div class="nb-q-sub">${q.sub}</div>` : ""}
+      <div class="nb-options" style="display: grid; grid-template-columns: repeat(${q.cols || 1}, 1fr); gap: 10px;">
+        ${optHtml}
       </div>
-    `).join("");
- 
-    getContent().innerHTML = `
-      <div class="nb-question">
-        <div class="nb-q-step">${q.step}</div>
-        <div class="nb-q-text">${q.text}</div>
-        ${q.sub ? `<div class="nb-q-sub">${q.sub}</div>` : ""}
-        <div class="nb-options">${optHtml}</div>
-        <button class="nb-btn-primary" id="nb-next-btn" disabled>${isLast ? "Find my shoes" : "Continue"}</button>
-      </div>
-    `;
- 
-    const opts = root.querySelectorAll(".nb-opt");
-    const nextBtn = root.querySelector("#nb-next-btn");
- 
-    opts.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (!q.multi) {
-          opts.forEach(b => b.classList.remove("nb-selected"));
-          btn.classList.add("nb-selected");
-          state.selectedAnswers = [btn.dataset.answer];
-          nextBtn.disabled = false;
-        } else {
-          btn.classList.toggle("nb-selected");
-          const sel = [...root.querySelectorAll(".nb-opt.nb-selected")].map(b => b.dataset.answer);
-          state.selectedAnswers = sel;
-          nextBtn.disabled = sel.length === 0;
-        }
-      });
+      <button class="nb-btn-primary" id="nb-next-btn" disabled>
+        ${isLast ? "Find my shoes" : "Continue"}
+      </button>
+    </div>
+  `;
+
+  const opts = root.querySelectorAll(".nb-opt");
+  const nextBtn = root.querySelector("#nb-next-btn");
+
+  opts.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!q.multi) {
+        // Single select logic
+        opts.forEach(b => b.classList.remove("nb-selected"));
+        btn.classList.add("nb-selected");
+        state.selectedAnswers = [btn.dataset.answer];
+        nextBtn.disabled = false;
+      } else {
+        // Multi-select logic (Question 5)
+        btn.classList.toggle("nb-selected");
+        const sel = [...root.querySelectorAll(".nb-opt.nb-selected")].map(b => b.dataset.answer);
+        state.selectedAnswers = sel;
+        nextBtn.disabled = sel.length === 0;
+      }
     });
- 
-    nextBtn.addEventListener("click", advanceQuestion);
-  }
+  });
+
+  nextBtn.addEventListener("click", advanceQuestion);
+}
  
   function advanceQuestion() {
     state.selectedAnswers.forEach(a => {
-      state.userTags.push(...(tagMap[a] || []));
+      const tags = tagMap[a] || [];
+      state.userTags.push(...tags);
     });
-    state.selectedAnswers = [];
+    
+    state.selectedAnswers = []; // Clear for next round
     state.qIndex++;
-    if (state.qIndex >= questions.length) startSwipe();
-    else renderQuestion();
-  }
- 
-  // ─── RENDER: SWIPE ───────────────────────────────────────────
-  function startSwipe() {
+    
+    if (state.qIndex >= questions.length) {
+      startSwipe(); // Transition to the swipe phase
+    } else {
+      renderQuestion();
+    }
+  } 
+// ─── RENDER: SWIPE (DYNAMIC DATABASE FETCH) ───────────────────
+  async function startSwipe() {
     setProgress(90);
-    state.swipeShoes = getTopShoes(state.userTags, 5);
+    
+    // Show a quick loading state while we fetch scraped shoes from the backend
+    getContent().innerHTML = `
+      <div style="text-align:center; padding: 4rem; font-family:'Outfit', sans-serif;">
+        <h3 style="color: var(--nb-brown-dark);">Loading your lineup... 👟</h3>
+      </div>
+    `;
+
+    try {
+      // Ask the backend to search ChromaDB for the top 5 shoes matching the quiz tags
+      const response = await fetch("http://localhost:8000/api/candidates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tags: state.userTags })
+      });
+      
+      if (!response.ok) throw new Error("Backend candidate fetch failed");
+      
+      state.swipeShoes = await response.json(); 
+      
+    } catch (error) {
+      console.warn("Using local shoe dataset as fallback.");
+      state.swipeShoes = getTopShoes(state.userTags, 5); 
+    }
+
     state.swipeIndex = 0;
     state.likedTags = [];
+    state.likedShoeNames = [];
     renderSwipe();
   }
- 
+
   function renderSwipe() {
     if (state.swipeIndex >= state.swipeShoes.length) {
       renderResult();

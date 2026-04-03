@@ -36,3 +36,8 @@ img {
     border-radius: 10px;
 }
 
+.nb-opt.nb-selected {
+  background: var(--nb-bisque-dark);
+  border-color: var(--nb-brown);
+  outline: 2px solid var(--nb-brown);
+}
