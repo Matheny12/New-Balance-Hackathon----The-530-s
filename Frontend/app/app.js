@@ -284,7 +284,7 @@ function initNBQuiz(rootId) {
     }
     .nb-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 13px;
+      font-size: 30px;
       font-weight: 600;
       color: var(--nb-brown);
       letter-spacing: 0.1em;
@@ -1011,7 +1011,7 @@ function renderQuestion() {
   root.innerHTML = `
     <div class="nb-header">
       <span class="nb-badge">NB</span>
-      <span class="nb-title">Shoe Finder</span>
+      <span class="nb-title">Find Your Pair</span>
     </div>
     <div class="nb-progress" id="nb-progress">
       <div class="nb-progress-fill" id="nb-progress-fill" style="width:0%"></div>
