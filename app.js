@@ -240,6 +240,7 @@ function initNBQuiz(rootId) {
     userTags: [],
     selectedAnswers: [],
     likedTags: [],
+    likedShoeNames: [],
     swipeShoes: [],
     swipeIndex: 0
   };
@@ -739,6 +740,7 @@ function initNBQuiz(rootId) {
       qIndex: 0,
       userTags: [],
       selectedAnswers: [],
+      likedShoeNames: [],
       likedTags: [],
       swipeShoes: [],
       swipeIndex: 0
@@ -866,6 +868,8 @@ function initNBQuiz(rootId) {
  
     root.querySelector("#nb-like-btn").addEventListener("click", () => {
       state.likedTags.push(...state.swipeShoes[state.swipeIndex].tags);
+      // <-- ADD THIS LINE to track the name for the AI
+      state.likedShoeNames.push(state.swipeShoes[state.swipeIndex].name); 
       state.swipeIndex++;
       renderSwipe();
     });
@@ -875,59 +879,102 @@ function initNBQuiz(rootId) {
     });
   }
  
-  // ─── RENDER: RESULT ──────────────────────────────────────────
-  function renderResult() {
+// ─── RENDER: RESULT (AI CONNECTED) ──────────────────────────
+  async function renderResult() {
     setProgress(100);
-    const sourceTags = state.likedTags.length > 0 ? state.likedTags : state.userTags;
-    const scored = shoes
-      .map(s => ({ ...s, score: s.tags.filter(t => sourceTags.includes(t)).length }))
-      .sort((a, b) => b.score - a.score);
- 
-    const best = scored[0];
-    const maxScore = Math.max(...scored.map(s => s.score), 1);
-    const pct = Math.min(Math.round((best.score / maxScore) * 100), 98);
-    const runners = scored.slice(1, 4);
- 
+    
+    // 1. Show a loading state that perfectly matches your UI
     getContent().innerHTML = `
-      <div class="nb-result">
-        <div class="nb-result-header">
-          <div class="nb-result-eyebrow">Your match</div>
-          <div class="nb-result-name">${best.name}</div>
-          <div class="nb-result-profile">${best.profile}</div>
-          <img class="nb-result-img" src="${best.image}" alt="${best.name}">
-        </div>
-        <div class="nb-result-body">
-          <div class="nb-result-blurb">${best.desc}</div>
-          <div class="nb-match-row">
-            <span class="nb-match-label">Match</span>
-            <div class="nb-match-bar">
-              <div class="nb-match-fill" style="width:${pct}%"></div>
-            </div>
-            <span class="nb-match-pct">${pct}%</span>
-          </div>
-          <div class="nb-runners-up">
-            <div class="nb-runners-label">Also worth a look</div>
-            ${runners.map(r => `
-              <div class="nb-runner">
-                <img class="nb-runner-img" src="${r.image}" alt="${r.name}">
-                <div>
-                  <div class="nb-runner-name">${r.name}</div>
-                  <div class="nb-runner-profile">${r.profile}</div>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-          <button class="nb-btn-primary" id="nb-retry-btn">Retake the quiz</button>
-        </div>
+      <div class="nb-result" style="padding: 3.5rem 2rem; text-align: center;">
+        <div class="nb-result-name" style="margin-bottom: 1rem;">Consulting AI... 🧠</div>
+        <div class="nb-result-blurb">Analyzing your vibes and searching the New Balance catalog for the ultimate match.</div>
       </div>
     `;
- 
-    root.querySelector("#nb-retry-btn").addEventListener("click", () => {
-      resetState();
-      renderIntro();
-    });
+
+    try {
+      // 2. Build payload for FastAPI
+      const payload = {
+        quiz_tags: state.userTags,
+        liked_shoe_names: state.likedShoeNames.length > 0 ? state.likedShoeNames : ["New Balance 574"]
+      };
+
+      // 3. Fetch from your backend
+      const response = await fetch("http://localhost:8000/api/match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error("Backend connection failed");
+      const aiBest = await response.json();
+
+      // 4. Keep your local logic to calculate the "Runners Up" list for the UI!
+      const sourceTags = state.likedTags.length > 0 ? state.likedTags : state.userTags;
+      const scored = shoes
+        .map(s => ({ ...s, score: s.tags.filter(t => sourceTags.includes(t)).length }))
+        .sort((a, b) => b.score - a.score)
+        .filter(s => s.name !== aiBest.shoe_name); // Remove the winner from the runners-up list
+
+      const runners = scored.slice(0, 3);
+      const pct = 98; // AI Match is always highly confident
+
+      // 5. Render the final UI injecting the AI data
+      getContent().innerHTML = `
+        <div class="nb-result">
+          <div class="nb-result-header">
+            <div class="nb-result-eyebrow">Your AI Match</div>
+            <div class="nb-result-name">${aiBest.shoe_name}</div>
+            <div class="nb-result-profile">Recommended by Gemini</div>
+            <img class="nb-result-img" src="${aiBest.image_url}" alt="${aiBest.shoe_name}">
+          </div>
+          <div class="nb-result-body">
+            <div class="nb-result-blurb">"${aiBest.explanation}"</div>
+            <div class="nb-match-row">
+              <span class="nb-match-label">Match</span>
+              <div class="nb-match-bar">
+                <div class="nb-match-fill" style="width:${pct}%"></div>
+              </div>
+              <span class="nb-match-pct">${pct}%</span>
+            </div>
+            <div class="nb-runners-up">
+              <div class="nb-runners-label">Also worth a look</div>
+              ${runners.map(r => `
+                <div class="nb-runner">
+                  <img class="nb-runner-img" src="${r.image}" alt="${r.name}">
+                  <div>
+                    <div class="nb-runner-name">${r.name}</div>
+                    <div class="nb-runner-profile">${r.profile}</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+            <button class="nb-btn-primary" id="nb-retry-btn">Retake the quiz</button>
+          </div>
+        </div>
+      `;
+
+      // Reattach retry listener
+      root.querySelector("#nb-retry-btn").addEventListener("click", () => {
+        resetState();
+        renderIntro();
+      });
+
+    } catch (error) {
+      console.error(error);
+      getContent().innerHTML = `
+        <div class="nb-result" style="padding: 3rem 2rem; text-align: center;">
+          <div class="nb-result-name">Connection Error</div>
+          <div class="nb-result-blurb">Make sure your Python backend is running on port 8000!</div>
+          <button class="nb-btn-primary" id="nb-retry-btn-err">Try Again</button>
+        </div>
+      `;
+      root.querySelector("#nb-retry-btn-err").addEventListener("click", () => {
+        resetState();
+        renderIntro();
+      });
+    }
   }
- 
+   
   // ─── MOUNT ───────────────────────────────────────────────────
   root.innerHTML = `
     <div class="nb-header">
