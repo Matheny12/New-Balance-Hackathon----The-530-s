@@ -1,0 +1,38 @@
+body {
+    text-align: center;
+    margin-top: 100px;
+    background-color: bisque;
+}
+
+h1 {
+    font-family: Merriweather, sans-serif;
+    font-size: 60px;
+    color: rgb(65, 44, 27);
+    text-shadow: 2px 2px 3px rgba(51, 25, 10, 0.5);
+}
+
+h2 {
+    font-family: Outfit, sans-serif;
+    font-size: 40px;
+    color: rgb(133, 65, 34);
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: rgb(133, 65, 34);
+    outline: auto;
+    outline-color: rgb(58, 19, 10);
+    outline-width: 10px;
+    color: bisque;
+    font-size: 30px;
+    font-family: Outfit, sans-serif;
+}
+
+img {
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
