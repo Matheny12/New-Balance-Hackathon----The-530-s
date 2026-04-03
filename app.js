@@ -81,9 +81,9 @@
 //   https://www.steadyfoot.com/new-balance-990v6-vs-v1-vs-v2-vs-v3-vs-v4-vs-v5/
 //   (general NB lifestyle lineup positioning context)
 // ─────────────────────────────────────────────────────────────
-
+ 
 function initNBQuiz(rootId) {
-
+ 
   // ─── SHOE DATASET ───────────────────────────────────────────
   const shoes = [
     {
@@ -143,7 +143,7 @@ function initNBQuiz(rootId) {
       image: "https://nb.scene7.com/is/image/NB/mroavtk_nb_02_i?$pdpflexf2$"
     }
   ];
-
+ 
   // ─── QUIZ QUESTIONS ─────────────────────────────────────────
   const questions = [
     {
@@ -208,7 +208,7 @@ function initNBQuiz(rootId) {
       ]
     }
   ];
-
+ 
   // ─── TAG MAP — answer key → shoe tags ───────────────────────
   const tagMap = {
     running:       ["running", "athletic", "performance", "road_running"],
@@ -232,7 +232,7 @@ function initNBQuiz(rootId) {
     travel:        ["travel", "all_day", "standing_all_day", "made_in_usa", "comfort"],
     affordable:    ["affordable", "accessible", "casual"]
   };
-
+ 
   // ─── STATE ───────────────────────────────────────────────────
   let state = {
     phase: "intro",
@@ -243,87 +243,97 @@ function initNBQuiz(rootId) {
     swipeShoes: [],
     swipeIndex: 0
   };
-
+ 
   // ─── CSS ─────────────────────────────────────────────────────
+  // Styled to match your existing stylesheet:
+  //   background-color: bisque | h1: Merriweather, rgb(65,44,27)
+  //   h2: Outfit, rgb(133,65,34) | buttons: rgb(133,65,34) bg, bisque text, Outfit font
   const CSS = `
-    #nb-quiz-root * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Outfit:wght@400;500;600;700&display=swap');
+ 
+    #nb-quiz-root * { box-sizing: border-box; margin: 0; padding: 0; }
     #nb-quiz-root {
-      --nb-orange: #E85D04;
-      --nb-black: #111111;
-      --nb-gray-100: #F5F5F5;
-      --nb-gray-200: #E8E8E8;
-      --nb-gray-400: #AAAAAA;
-      --nb-gray-600: #666666;
-      --nb-white: #FFFFFF;
-      --nb-text: #111111;
-      --nb-radius: 14px;
-      --nb-radius-sm: 8px;
+      --nb-brown:       rgb(133, 65, 34);
+      --nb-brown-dark:  rgb(65, 44, 27);
+      --nb-brown-deep:  rgb(58, 19, 10);
+      --nb-bisque:      bisque;
+      --nb-bisque-dark: rgb(235, 200, 160);
+      --nb-bisque-mid:  rgb(220, 175, 130);
+      --nb-card-bg:     rgba(255, 235, 205, 0.55);
+      --nb-radius:      14px;
+      --nb-radius-sm:   8px;
       min-height: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 2.5rem 1.25rem 4rem;
-      background: #FAFAFA;
+      font-family: 'Outfit', sans-serif;
     }
     .nb-header {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 12px;
       margin-bottom: 2.5rem;
     }
     .nb-badge {
-      background: var(--nb-orange);
-      color: #fff;
-      font-size: 12px;
+      background: var(--nb-brown);
+      color: var(--nb-bisque);
+      font-family: 'Merriweather', sans-serif;
+      font-size: 13px;
       font-weight: 700;
-      padding: 5px 11px;
+      padding: 6px 13px;
       border-radius: 4px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
+      text-shadow: 1px 1px 2px rgba(58,19,10,0.4);
     }
     .nb-title {
-      font-size: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown);
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
     .nb-progress {
       width: 100%; max-width: 480px;
-      height: 2px;
-      background: var(--nb-gray-200);
+      height: 4px;
+      background: var(--nb-bisque-dark);
       border-radius: 2px;
       margin-bottom: 2.5rem;
       display: none;
     }
     .nb-progress-fill {
-      height: 2px;
-      background: var(--nb-orange);
+      height: 4px;
+      background: var(--nb-brown);
       border-radius: 2px;
       transition: width 0.5s cubic-bezier(.4,0,.2,1);
     }
-
+ 
     /* ── INTRO ─────────────────────────────── */
     .nb-intro {
       width: 100%; max-width: 480px;
-      background: var(--nb-white);
+      background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
-      border: 1px solid var(--nb-gray-200);
+      border: 1.5px solid var(--nb-bisque-mid);
       padding: 2.5rem 2rem 2rem;
       text-align: center;
       animation: nbFadeUp 0.35s ease;
     }
     .nb-intro-headline {
-      font-size: 28px;
+      font-family: 'Merriweather', sans-serif;
+      font-size: 30px;
       font-weight: 700;
-      color: var(--nb-black);
-      line-height: 1.25;
+      color: var(--nb-brown-dark);
+      line-height: 1.3;
       margin-bottom: 0.75rem;
-      letter-spacing: -0.02em;
+      text-shadow: 1px 1px 2px rgba(51,25,10,0.25);
     }
-    .nb-intro-headline span { color: var(--nb-orange); }
+    .nb-intro-headline span { color: var(--nb-brown); }
     .nb-intro-sub {
+      font-family: 'Outfit', sans-serif;
       font-size: 15px;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown-dark);
       line-height: 1.65;
       margin-bottom: 1.75rem;
+      opacity: 0.8;
     }
     .nb-intro-pills {
       display: flex; flex-wrap: wrap;
@@ -331,43 +341,48 @@ function initNBQuiz(rootId) {
       margin-bottom: 2rem;
     }
     .nb-pill {
+      font-family: 'Outfit', sans-serif;
       font-size: 12px;
       font-weight: 500;
-      color: var(--nb-gray-600);
-      background: var(--nb-gray-100);
-      border: 1px solid var(--nb-gray-200);
+      color: var(--nb-brown);
+      background: var(--nb-bisque);
+      border: 1px solid var(--nb-bisque-mid);
       padding: 5px 13px;
       border-radius: 30px;
     }
-
+ 
     /* ── QUESTION ──────────────────────────── */
     .nb-question {
       width: 100%; max-width: 480px;
-      background: var(--nb-white);
+      background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
-      border: 1px solid var(--nb-gray-200);
+      border: 1.5px solid var(--nb-bisque-mid);
       padding: 2rem 1.75rem;
       animation: nbFadeUp 0.3s ease;
     }
     .nb-q-step {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--nb-orange);
-      margin-bottom: 0.6rem;
-    }
-    .nb-q-text {
-      font-size: 21px;
-      font-weight: 700;
-      color: var(--nb-black);
-      line-height: 1.35;
-      letter-spacing: -0.01em;
+      color: var(--nb-brown);
       margin-bottom: 0.5rem;
     }
+    .nb-q-text {
+      font-family: 'Merriweather', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--nb-brown-dark);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      text-shadow: 1px 1px 2px rgba(51,25,10,0.15);
+    }
     .nb-q-sub {
+      font-family: 'Outfit', sans-serif;
       font-size: 13px;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown-dark);
+      opacity: 0.7;
       margin-bottom: 1.5rem;
     }
     .nb-options {
@@ -376,8 +391,8 @@ function initNBQuiz(rootId) {
       gap: 10px;
     }
     .nb-opt {
-      background: var(--nb-gray-100);
-      border: 1.5px solid var(--nb-gray-200);
+      background: var(--nb-bisque);
+      border: 2px solid var(--nb-bisque-mid);
       border-radius: var(--nb-radius-sm);
       padding: 14px 10px 12px;
       cursor: pointer;
@@ -388,39 +403,43 @@ function initNBQuiz(rootId) {
       -webkit-tap-highlight-color: transparent;
     }
     .nb-opt:hover {
-      border-color: var(--nb-orange);
-      background: #FFF5F0;
+      border-color: var(--nb-brown);
+      background: var(--nb-bisque-dark);
     }
     .nb-opt.nb-selected {
-      border-color: var(--nb-orange);
-      background: #FFF5F0;
-      box-shadow: 0 0 0 2px var(--nb-orange);
+      border-color: var(--nb-brown-deep);
+      background: var(--nb-bisque-dark);
+      outline: 3px solid var(--nb-brown);
+      outline-offset: -1px;
     }
     .nb-opt-icon { font-size: 24px; line-height: 1; }
     .nb-opt-label {
-      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--nb-black);
+      color: var(--nb-brown-dark);
     }
     .nb-opt-desc {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown);
+      opacity: 0.85;
       line-height: 1.3;
     }
-
+ 
     /* ── SWIPE PHASE ───────────────────────── */
     .nb-swipe-area {
       width: 100%; max-width: 390px;
     }
     .nb-shoe-card {
-      background: var(--nb-white);
+      background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
-      border: 1px solid var(--nb-gray-200);
+      border: 1.5px solid var(--nb-bisque-mid);
       overflow: hidden;
       animation: nbFadeUp 0.3s ease;
     }
     .nb-shoe-img-wrap {
-      background: var(--nb-gray-100);
+      background: var(--nb-bisque);
       padding: 2rem 1.25rem 1.25rem;
       display: flex; flex-direction: column;
       align-items: center;
@@ -429,9 +448,11 @@ function initNBQuiz(rootId) {
     .nb-shoe-counter {
       position: absolute;
       top: 12px; right: 14px;
-      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--nb-gray-400);
+      color: var(--nb-brown);
+      opacity: 0.7;
       letter-spacing: 0.05em;
     }
     .nb-shoe-img {
@@ -439,26 +460,32 @@ function initNBQuiz(rootId) {
       max-width: 260px;
       height: 155px;
       object-fit: contain;
+      border-radius: 10px;
+      margin-top: 20px;
     }
     .nb-shoe-info { padding: 1.25rem 1.5rem 1.5rem; }
     .nb-shoe-name {
+      font-family: 'Merriweather', sans-serif;
       font-size: 18px;
       font-weight: 700;
-      color: var(--nb-black);
-      letter-spacing: -0.01em;
-      margin-bottom: 3px;
+      color: var(--nb-brown-dark);
+      text-shadow: 1px 1px 2px rgba(51,25,10,0.15);
+      margin-bottom: 4px;
     }
     .nb-shoe-profile {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
       font-weight: 700;
-      color: var(--nb-orange);
+      color: var(--nb-brown);
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.1em;
       margin-bottom: 10px;
     }
     .nb-shoe-desc {
-      font-size: 13px;
-      color: var(--nb-gray-600);
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--nb-brown-dark);
+      opacity: 0.8;
       line-height: 1.6;
       margin-bottom: 14px;
     }
@@ -466,13 +493,14 @@ function initNBQuiz(rootId) {
       display: flex; flex-wrap: wrap; gap: 6px;
     }
     .nb-tag {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
       font-weight: 500;
       padding: 3px 10px;
       border-radius: 20px;
-      background: var(--nb-gray-100);
-      color: var(--nb-gray-600);
-      border: 1px solid var(--nb-gray-200);
+      background: var(--nb-bisque);
+      color: var(--nb-brown);
+      border: 1px solid var(--nb-bisque-mid);
     }
     .nb-swipe-btns {
       display: grid;
@@ -481,69 +509,78 @@ function initNBQuiz(rootId) {
       margin-top: 14px;
     }
     .nb-skip {
-      padding: 14px;
+      padding: 10px 20px;
       border-radius: var(--nb-radius-sm);
-      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
       font-weight: 600;
       cursor: pointer;
-      background: var(--nb-white);
-      border: 1.5px solid var(--nb-gray-200);
-      color: var(--nb-gray-600);
+      background: var(--nb-bisque);
+      border: 2px solid var(--nb-bisque-mid);
+      outline: 3px solid var(--nb-brown-deep);
+      color: var(--nb-brown);
       transition: all 0.15s;
     }
     .nb-like {
-      padding: 14px;
+      padding: 10px 20px;
       border-radius: var(--nb-radius-sm);
-      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
       font-weight: 600;
       cursor: pointer;
-      background: var(--nb-orange);
-      border: none;
-      color: #fff;
+      background: var(--nb-brown);
+      border: 2px solid var(--nb-brown-deep);
+      outline: 3px solid var(--nb-brown-deep);
+      color: var(--nb-bisque);
       transition: opacity 0.15s;
     }
-    .nb-skip:hover { border-color: #999; color: #333; }
+    .nb-skip:hover { background: var(--nb-bisque-dark); border-color: var(--nb-brown); }
     .nb-like:hover { opacity: 0.88; }
     .nb-swipe-hint {
-      font-size: 11px;
-      color: var(--nb-gray-400);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      color: var(--nb-brown);
+      opacity: 0.6;
       text-align: center;
       margin-top: 9px;
       letter-spacing: 0.02em;
     }
-
+ 
     /* ── RESULT ────────────────────────────── */
     .nb-result {
       width: 100%; max-width: 420px;
-      background: var(--nb-white);
+      background: var(--nb-card-bg);
       border-radius: var(--nb-radius);
-      border: 1px solid var(--nb-gray-200);
+      border: 1.5px solid var(--nb-bisque-mid);
       overflow: hidden;
       animation: nbFadeUp 0.4s ease;
     }
     .nb-result-header {
-      background: var(--nb-gray-100);
+      background: var(--nb-bisque);
       padding: 2rem 1.5rem 1.5rem;
       text-align: center;
     }
     .nb-result-eyebrow {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--nb-orange);
+      letter-spacing: 0.14em;
+      color: var(--nb-brown);
       margin-bottom: 8px;
     }
     .nb-result-name {
+      font-family: 'Merriweather', sans-serif;
       font-size: 24px;
       font-weight: 700;
-      color: var(--nb-black);
-      letter-spacing: -0.02em;
+      color: var(--nb-brown-dark);
+      text-shadow: 2px 2px 3px rgba(51,25,10,0.3);
       margin-bottom: 4px;
     }
     .nb-result-profile {
-      font-size: 12px;
-      color: var(--nb-gray-600);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      color: var(--nb-brown);
       margin-bottom: 1.25rem;
       font-weight: 500;
     }
@@ -554,11 +591,14 @@ function initNBQuiz(rootId) {
       object-fit: contain;
       display: block;
       margin: 0 auto;
+      border-radius: 10px;
     }
     .nb-result-body { padding: 1.5rem; }
     .nb-result-blurb {
+      font-family: 'Outfit', sans-serif;
       font-size: 14px;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown-dark);
+      opacity: 0.85;
       line-height: 1.65;
       margin-bottom: 1.25rem;
     }
@@ -569,105 +609,100 @@ function initNBQuiz(rootId) {
       margin-bottom: 1.5rem;
     }
     .nb-match-label {
+      font-family: 'Outfit', sans-serif;
       font-size: 12px;
       font-weight: 600;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown);
       white-space: nowrap;
     }
     .nb-match-bar {
       flex: 1;
-      height: 5px;
-      background: var(--nb-gray-200);
+      height: 6px;
+      background: var(--nb-bisque-dark);
       border-radius: 3px;
       overflow: hidden;
     }
     .nb-match-fill {
-      height: 5px;
-      background: var(--nb-orange);
+      height: 6px;
+      background: var(--nb-brown);
       border-radius: 3px;
     }
     .nb-match-pct {
-      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--nb-black);
+      color: var(--nb-brown-dark);
       white-space: nowrap;
     }
     .nb-runners-up {
-      border-top: 1px solid var(--nb-gray-200);
+      border-top: 1.5px solid var(--nb-bisque-mid);
       padding-top: 1.25rem;
     }
     .nb-runners-label {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--nb-gray-400);
+      color: var(--nb-brown);
+      opacity: 0.6;
       margin-bottom: 10px;
     }
     .nb-runner {
       display: flex; align-items: center;
       gap: 12px; padding: 8px 0;
-      border-bottom: 1px solid var(--nb-gray-200);
+      border-bottom: 1px solid var(--nb-bisque-mid);
     }
     .nb-runner:last-child { border-bottom: none; }
     .nb-runner-img {
       width: 56px; height: 38px;
       object-fit: contain;
-      background: var(--nb-gray-100);
-      border-radius: 6px;
+      background: var(--nb-bisque);
+      border-radius: 8px;
       padding: 4px;
       flex-shrink: 0;
     }
     .nb-runner-name {
+      font-family: 'Outfit', sans-serif;
       font-size: 13px;
       font-weight: 700;
-      color: var(--nb-black);
+      color: var(--nb-brown-dark);
     }
     .nb-runner-profile {
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
-      color: var(--nb-gray-600);
+      color: var(--nb-brown);
       margin-top: 1px;
+      opacity: 0.8;
     }
-
+ 
     /* ── SHARED BUTTONS ────────────────────── */
     .nb-btn-primary {
       margin-top: 1.5rem;
       width: 100%;
-      padding: 15px;
-      background: var(--nb-orange);
-      color: #fff;
+      padding: 10px 20px;
+      background: var(--nb-brown);
+      color: var(--nb-bisque);
       border: none;
+      outline: auto;
+      outline-color: var(--nb-brown-deep);
+      outline-width: 4px;
       border-radius: var(--nb-radius-sm);
-      font-size: 15px;
-      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
       cursor: pointer;
-      letter-spacing: 0.02em;
       transition: opacity 0.15s;
     }
     .nb-btn-primary:disabled { opacity: 0.3; cursor: default; }
     .nb-btn-primary:not(:disabled):hover { opacity: 0.88; }
-    .nb-btn-outline {
-      margin-top: 12px;
-      width: 100%;
-      padding: 14px;
-      background: transparent;
-      color: var(--nb-orange);
-      border: 1.5px solid var(--nb-orange);
-      border-radius: var(--nb-radius-sm);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.02em;
-      transition: all 0.15s;
-    }
-    .nb-btn-outline:hover { background: var(--nb-orange); color: #fff; }
-
+ 
     @keyframes nbFadeUp {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
   `;
-
+ 
   // ─── INJECT STYLES ───────────────────────────────────────────
   if (!document.getElementById("nb-quiz-styles")) {
     const styleEl = document.createElement("style");
@@ -675,11 +710,11 @@ function initNBQuiz(rootId) {
     styleEl.textContent = CSS;
     document.head.appendChild(styleEl);
   }
-
+ 
   // ─── HELPERS ─────────────────────────────────────────────────
   const root = document.getElementById(rootId);
   if (!root) { console.error("nb-quiz: root element not found:", rootId); return; }
-
+ 
   function setProgress(pct) {
     const bar = root.querySelector(".nb-progress");
     const fill = root.querySelector(".nb-progress-fill");
@@ -688,16 +723,16 @@ function initNBQuiz(rootId) {
     bar.style.display = "block";
     fill.style.width = pct + "%";
   }
-
+ 
   function getContent() { return root.querySelector("#nb-content"); }
-
+ 
   function getTopShoes(tags, n) {
     return shoes
       .map(s => ({ ...s, score: s.tags.filter(t => tags.includes(t)).length }))
       .sort((a, b) => b.score - a.score)
       .slice(0, n || 5);
   }
-
+ 
   function resetState() {
     state = {
       phase: "intro",
@@ -709,7 +744,7 @@ function initNBQuiz(rootId) {
       swipeIndex: 0
     };
   }
-
+ 
   // ─── RENDER: INTRO ───────────────────────────────────────────
   function renderIntro() {
     setProgress(0);
@@ -730,14 +765,14 @@ function initNBQuiz(rootId) {
     `;
     root.querySelector("#nb-start-btn").addEventListener("click", startQuiz);
   }
-
+ 
   // ─── RENDER: QUESTION ────────────────────────────────────────
   function renderQuestion() {
     const q = questions[state.qIndex];
     const pct = Math.round((state.qIndex / questions.length) * 100);
     setProgress(pct);
     const isLast = state.qIndex === questions.length - 1;
-
+ 
     const optHtml = q.options.map(o => `
       <div class="nb-opt" data-answer="${o.answer}">
         <span class="nb-opt-icon">${o.icon}</span>
@@ -745,7 +780,7 @@ function initNBQuiz(rootId) {
         <span class="nb-opt-desc">${o.desc}</span>
       </div>
     `).join("");
-
+ 
     getContent().innerHTML = `
       <div class="nb-question">
         <div class="nb-q-step">${q.step}</div>
@@ -755,10 +790,10 @@ function initNBQuiz(rootId) {
         <button class="nb-btn-primary" id="nb-next-btn" disabled>${isLast ? "Find my shoes" : "Continue"}</button>
       </div>
     `;
-
+ 
     const opts = root.querySelectorAll(".nb-opt");
     const nextBtn = root.querySelector("#nb-next-btn");
-
+ 
     opts.forEach(btn => {
       btn.addEventListener("click", () => {
         if (!q.multi) {
@@ -774,10 +809,10 @@ function initNBQuiz(rootId) {
         }
       });
     });
-
+ 
     nextBtn.addEventListener("click", advanceQuestion);
   }
-
+ 
   function advanceQuestion() {
     state.selectedAnswers.forEach(a => {
       state.userTags.push(...(tagMap[a] || []));
@@ -787,7 +822,7 @@ function initNBQuiz(rootId) {
     if (state.qIndex >= questions.length) startSwipe();
     else renderQuestion();
   }
-
+ 
   // ─── RENDER: SWIPE ───────────────────────────────────────────
   function startSwipe() {
     setProgress(90);
@@ -796,7 +831,7 @@ function initNBQuiz(rootId) {
     state.likedTags = [];
     renderSwipe();
   }
-
+ 
   function renderSwipe() {
     if (state.swipeIndex >= state.swipeShoes.length) {
       renderResult();
@@ -804,7 +839,7 @@ function initNBQuiz(rootId) {
     }
     const shoe = state.swipeShoes[state.swipeIndex];
     const displayTags = shoe.tags.slice(0, 6);
-
+ 
     getContent().innerHTML = `
       <div class="nb-swipe-area">
         <div class="nb-shoe-card">
@@ -828,7 +863,7 @@ function initNBQuiz(rootId) {
         <div class="nb-swipe-hint">Like shoes that feel right — we'll refine your match</div>
       </div>
     `;
-
+ 
     root.querySelector("#nb-like-btn").addEventListener("click", () => {
       state.likedTags.push(...state.swipeShoes[state.swipeIndex].tags);
       state.swipeIndex++;
@@ -839,7 +874,7 @@ function initNBQuiz(rootId) {
       renderSwipe();
     });
   }
-
+ 
   // ─── RENDER: RESULT ──────────────────────────────────────────
   function renderResult() {
     setProgress(100);
@@ -847,12 +882,12 @@ function initNBQuiz(rootId) {
     const scored = shoes
       .map(s => ({ ...s, score: s.tags.filter(t => sourceTags.includes(t)).length }))
       .sort((a, b) => b.score - a.score);
-
+ 
     const best = scored[0];
     const maxScore = Math.max(...scored.map(s => s.score), 1);
     const pct = Math.min(Math.round((best.score / maxScore) * 100), 98);
     const runners = scored.slice(1, 4);
-
+ 
     getContent().innerHTML = `
       <div class="nb-result">
         <div class="nb-result-header">
@@ -886,13 +921,13 @@ function initNBQuiz(rootId) {
         </div>
       </div>
     `;
-
+ 
     root.querySelector("#nb-retry-btn").addEventListener("click", () => {
       resetState();
       renderIntro();
     });
   }
-
+ 
   // ─── MOUNT ───────────────────────────────────────────────────
   root.innerHTML = `
     <div class="nb-header">
@@ -904,16 +939,16 @@ function initNBQuiz(rootId) {
     </div>
     <div id="nb-content"></div>
   `;
-
+ 
   function startQuiz() {
     resetState();
     state.phase = "quiz";
     renderQuestion();
   }
-
+ 
   renderIntro();
 }
-
+ 
 // ─── USAGE ───────────────────────────────────────────────────────
 // 1. Add to your HTML:  <div id="nb-quiz-root"></div>
 // 2. Load this script:  <script src="nb-shoe-quiz.js"></script>
