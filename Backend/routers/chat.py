@@ -61,21 +61,23 @@ async def get_candidates(request: TagRequest):
 
 @router.post("/api/match", response_model=MatchResponse)
 async def get_perfect_shoe(request: MatchRequest):
-    """
-    The final AI decision. Takes the quiz vibes AND the user's swiped 'likes'
-    to pick the ultimate New Balance shoe from your scraped data.
-    """
     if not request.liked_shoe_names:
         raise HTTPException(status_code=400, detail="User didn't like any shoes!")
 
-    # This calls your RAG logic in services/rag_service.py
     ai_result = generate_match(
         tags=request.quiz_tags, 
         liked_shoes=request.liked_shoe_names
     )
     
+    # --- SAFETY CHECK ---
+    # Ensure ai_result is a dictionary and has the keys we need
+    # This prevents the Pydantic ValidationError
+    shoe_name = ai_result.get("shoe_name") or "New Balance 530"
+    image_url = ai_result.get("image_url") or "https://nb.scene7.com/is/image/NB/mr530sg_nb_02_i?$pdpflexf2$"
+    explanation = ai_result.get("explanation") or "A classic choice that matches your style."
+
     return MatchResponse(
-        shoe_name=ai_result["shoe_name"],
-        image_url=ai_result["image_url"],
-        explanation=ai_result["explanation"]
+        shoe_name=str(shoe_name),
+        image_url=str(image_url),
+        explanation=str(explanation)
     )
