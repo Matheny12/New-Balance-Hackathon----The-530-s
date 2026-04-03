@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+
+chromadb
+
+google-genai
+
+requests
+beautifulsoup4
+playwright
+python-dotenv
